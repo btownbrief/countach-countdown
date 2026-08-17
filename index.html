@@ -409,12 +409,12 @@
         <div class="lbl">Views</div>
         <div class="val" id="stViews">—</div>
         <div class="bar"><i id="viewBar"></i></div>
-        <div class="bar-lbl"><span id="viewPct"></span><span>goal he called: 2M — no bots</span></div>
+        <div class="bar-lbl"><span id="viewPct"></span><span>goal: 2M, no bots</span></div>
       </div>
       <div class="stat gold">
-        <div class="lbl">Likes = Lambo Entries</div>
+        <div class="lbl">Likes</div>
         <div class="val" id="stLikes">—</div>
-        <div class="note">Every like is a ticket in the Countach drawing. Odds right now: <b id="stOdds">—</b>.</div>
+        <div class="note">The Lambo pool. If a Sunday ever misses, it goes to somebody in here.</div>
       </div>
       <div class="stat">
         <div class="lbl">Comments</div>
@@ -438,7 +438,7 @@
       <div class="card"><div class="big">$800K</div><div class="sub">What the car is worth.</div></div>
       <div class="card"><div class="big red">−$400K</div><div class="sub">What he still owes on it. His words: he can't just "eat the Lambo."</div></div>
     </div>
-    <p class="fine">The deal, straight from the video: <b>like the video</b> and you're in the drawing. If a scheduled every-other-Sunday upload doesn't show, one person who liked it gets the Countach. Contract term: now through the <b>Super Bowl</b>. This is a fan page keeping score — the man said it on camera, we're just writing it down.</p>
+    <p class="fine">The deal, straight from the video: <b>like the video</b> and you're in. If a scheduled upload doesn't show, one person who liked it gets the Countach. Contract runs through the <b>Super Bowl</b>.</p>
   </section>
 
   <section>
@@ -448,10 +448,8 @@
 </main>
 
 <footer>
-  <div class="credit">FAN-MADE TRACKER · NOT AFFILIATED</div>
-  Made in Burlington, VT by <a href="https://www.instagram.com/btownbrief/" rel="noopener">@btownbrief</a> — I run a local newsletter and build games at <a href="https://play.btownbrief.com" rel="noopener">play.btownbrief.com</a>.<br>
-  Not affiliated with Steve. No entries collected here — the giveaway is whatever the man said on camera.
-  <div class="egg-hint">psst — try typing the bird.</div>
+  <div class="credit">MADE IN BURLINGTON, VT</div>
+  <a href="https://www.instagram.com/btownbrief/" rel="noopener">@btownbrief</a> · <a href="https://play.btownbrief.com" rel="noopener">play.btownbrief.com</a>
 </footer>
 
 <script>
@@ -522,7 +520,7 @@
       if (ms < 864e5){
         box.classList.add('danger');
         head.textContent = 'SWEAT MODE';
-        text.textContent = 'Less than 24 hours on the clock. Upload day. Everybody hold your likes ready.';
+        text.textContent = 'Less than 24 hours on the clock. Upload day.';
       }
       requestAnimationFrame ? setTimeout(tickClock, 250) : setTimeout(tickClock, 1000);
     }
@@ -798,8 +796,7 @@ try{
 
     var pct = Math.min(100, d.video.views/2e6*100);
     setTimeout(function(){ document.getElementById('viewBar').style.width = pct+'%'; }, 150);
-    document.getElementById('viewPct').textContent = pct.toFixed(1)+'% of 2M';
-    document.getElementById('stOdds').textContent = '1 in ' + n(d.video.likes);
+    document.getElementById('viewPct').textContent = pct.toFixed(1)+'%';
 
     var mins = Math.max(0, Math.round((Date.now()-Date.parse(d.fetchedAt))/6e4));
     document.getElementById('updatedChip').textContent =
