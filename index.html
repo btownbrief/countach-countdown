@@ -977,9 +977,11 @@ return true;
 
 <script>
 (function(){
-  fetch('data/stats.json', {cache:'no-store'}).then(function(r){
-    if(!r.ok) throw 0; return r.json();
-  }).then(function(d){
+  // live feed from the Pulse repo's steve-stats branch; seeded local copy as fallback
+  fetch('https://raw.githubusercontent.com/btownbrief/btown-brief/steve-stats/data/steve-stats.json', {cache:'no-store'})
+    .then(function(r){ if(!r.ok) throw 0; return r.json(); })
+    .catch(function(){ return fetch('data/stats.json', {cache:'no-store'}).then(function(r){ if(!r.ok) throw 0; return r.json(); }); })
+    .then(function(d){
     var sec = document.getElementById('liveSec');
     sec.style.display = 'block';
     var n = function(x){ return (x==null)? '—' : x.toLocaleString('en-US'); };
