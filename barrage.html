@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Level 999 Magic Barrage</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:#0a0a12;
+    min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:1.2rem;padding:1.2rem;
+    font-family:'Press Start 2P',monospace;
+  }
+  .hint{color:#5b5b7a;font-size:.55rem;letter-spacing:.2em;text-align:center;line-height:2}
+  .hint a{color:#19e3ff;text-decoration:none}
+
+  /* ---- the card (screenshot me) ---- */
+  .scene{
+    position:relative;
+    width:min(94vw,520px);
+    aspect-ratio:4/5;
+    border:4px solid #3a3226;
+    border-radius:6px;
+    overflow:hidden;
+    image-rendering:pixelated;
+    background:
+      radial-gradient(ellipse 90% 50% at 50% 30%, rgba(60,40,110,.9), transparent 70%),
+      linear-gradient(#171129 0%, #221737 55%, #14202a 55.2%, #0d1620 100%);
+    box-shadow:0 0 60px rgba(80,60,180,.35);
+  }
+  /* wildy ground */
+  .ground{
+    position:absolute;left:0;right:0;top:55%;bottom:0;
+    background:
+      repeating-linear-gradient(90deg, transparent 0 34px, rgba(0,0,0,.22) 34px 36px),
+      repeating-linear-gradient(0deg, transparent 0 26px, rgba(0,0,0,.18) 26px 28px),
+      linear-gradient(#2c3b2a,#1b2820);
+  }
+  .stars i{position:absolute;width:3px;height:3px;background:#cfd6ff;opacity:.8}
+  /* caster */
+  .caster{position:absolute;left:14%;top:34%;width:96px;height:150px}
+  .px{position:absolute;image-rendering:pixelated}
+  /* ancient robes dude, chunky pixels via box-shadow grid */
+  .sprite{
+    position:absolute;inset:0;
+  }
+  .sprite div{position:absolute}
+  /* spell orb + trail */
+  .orb{
+    position:absolute;
+    width:34px;height:34px;border-radius:50%;
+    background:radial-gradient(circle at 35% 35%, #dff6ff, #3fd0ff 45%, #1548c0 80%);
+    box-shadow:0 0 26px #3fd0ff, 0 0 60px rgba(63,208,255,.6);
+    animation:cast 1.6s ease-in infinite;
+    top:40%;left:32%;
+  }
+  @keyframes cast{
+    0%{transform:translate(0,0) scale(.5);opacity:0}
+    15%{opacity:1}
+    70%{transform:translate(200px,-10px) scale(1);opacity:1}
+    78%{transform:translate(215px,-12px) scale(1.9);opacity:.9}
+    100%{transform:translate(215px,-12px) scale(2.6);opacity:0}
+  }
+  .ice{
+    position:absolute;right:12%;top:30%;
+    width:96px;height:130px;
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .block{
+    width:86px;height:112px;
+    background:linear-gradient(160deg, rgba(190,240,255,.9), rgba(80,160,230,.75) 60%, rgba(30,80,160,.85));
+    clip-path:polygon(18% 0, 82% 4%, 100% 30%, 94% 100%, 8% 96%, 0 34%);
+    border:2px solid rgba(220,245,255,.8);
+    animation:shiver .28s linear infinite;
+  }
+  @keyframes shiver{0%,100%{transform:translateX(0)}25%{transform:translateX(-1.5px)}75%{transform:translateX(1.5px)}}
+  /* target inside ice */
+  .target{
+    position:absolute;bottom:8px;left:50%;transform:translateX(-50%);
+    font-size:2rem;filter:saturate(.4) brightness(.8)
+  }
+  /* hitsplat */
+  .splat{
+    position:absolute;right:17%;top:52%;
+    width:64px;height:64px;
+    background:#c01f1f;
+    clip-path:polygon(50% 0, 65% 35%, 100% 50%, 65% 65%, 50% 100%, 35% 65%, 0 50%, 35% 35%);
+    display:flex;align-items:center;justify-content:center;
+    color:#fff;font-size:.8rem;
+    animation:pop 1.6s ease-in infinite;
+    text-shadow:1px 1px 0 #000;
+  }
+  @keyframes pop{
+    0%,70%{transform:scale(0);opacity:0}
+    78%{transform:scale(1.25);opacity:1}
+    88%{transform:scale(1)}
+    100%{transform:scale(1);opacity:0}
+  }
+  /* level-up fireworks */
+  .fw{position:absolute;font-size:1.1rem;animation:fwspin 2.4s linear infinite}
+  @keyframes fwspin{0%{transform:scale(.4) rotate(0);opacity:0}20%{opacity:1}50%{transform:scale(1.15) rotate(180deg)}100%{transform:scale(.4) rotate(360deg);opacity:0}}
+
+  /* overhead text */
+  .overhead{
+    position:absolute;top:7%;left:0;right:0;
+    text-align:center;
+    color:#ffd21f;
+    font-size:clamp(.55rem,2.6vw,.8rem);
+    line-height:2;
+    text-shadow:2px 2px 0 #000;
+    animation:wave 1.2s ease-in-out infinite;
+  }
+  @keyframes wave{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  .overhead .lvl{color:#3fd0ff}
+
+  /* chatbox */
+  .chatbox{
+    position:absolute;left:0;right:0;bottom:0;
+    background:#c7b899;
+    border-top:3px solid #5c5140;
+    padding:.55rem .6rem .6rem;
+    font-size:clamp(.42rem,1.9vw,.55rem);
+    line-height:2.1;
+    color:#000;
+  }
+  .chatbox .u{color:#000}
+  .chatbox .m{color:#0000c0}
+  .chatbox .g{color:#7f00ff}
+  .chatbox .r{color:#c00000}
+  .chatbox .green{color:#006000}
+  .chatbox b{font-weight:normal}
+</style>
+</head>
+<body>
+
+<div class="scene" id="scene">
+  <div class="stars" aria-hidden="true">
+    <i style="top:6%;left:8%"></i><i style="top:12%;left:30%"></i><i style="top:4%;left:55%"></i>
+    <i style="top:10%;left:78%"></i><i style="top:18%;left:90%"></i><i style="top:20%;left:14%"></i>
+  </div>
+
+  <div class="overhead">Ektomorf44 casts<br><span class="lvl">LEVEL 999 MAGIC BARRAGE</span></div>
+
+  <!-- caster: ancient-robed pixel mage -->
+  <div class="caster" aria-hidden="true">
+    <div class="sprite">
+      <!-- hood -->
+      <div style="left:28px;top:0;width:34px;height:16px;background:#2a2140"></div>
+      <div style="left:24px;top:8px;width:42px;height:14px;background:#352a52"></div>
+      <!-- face shadow + eyes -->
+      <div style="left:32px;top:14px;width:26px;height:10px;background:#120c1e"></div>
+      <div style="left:36px;top:17px;width:4px;height:4px;background:#3fd0ff"></div>
+      <div style="left:48px;top:17px;width:4px;height:4px;background:#3fd0ff"></div>
+      <!-- robe body -->
+      <div style="left:22px;top:24px;width:46px;height:52px;background:#3b2e5e"></div>
+      <div style="left:22px;top:44px;width:46px;height:6px;background:#8a76c9"></div>
+      <!-- skirt -->
+      <div style="left:16px;top:76px;width:58px;height:40px;background:#2f2450"></div>
+      <div style="left:16px;top:108px;width:58px;height:8px;background:#221a3c"></div>
+      <!-- casting arm -->
+      <div style="left:64px;top:34px;width:26px;height:8px;background:#3b2e5e"></div>
+      <div style="left:86px;top:30px;width:8px;height:8px;background:#d9b98c"></div>
+      <!-- staff -->
+      <div style="left:6px;top:6px;width:6px;height:104px;background:#6b4a24"></div>
+      <div style="left:0px;top:0px;width:18px;height:14px;background:#3fd0ff;box-shadow:0 0 16px #3fd0ff"></div>
+      <!-- feet -->
+      <div style="left:26px;top:114px;width:14px;height:8px;background:#1c1430"></div>
+      <div style="left:50px;top:114px;width:14px;height:8px;background:#1c1430"></div>
+    </div>
+  </div>
+
+  <div class="orb" aria-hidden="true"></div>
+
+  <!-- frozen target -->
+  <div class="ice" aria-hidden="true">
+    <div class="block"></div>
+    <div class="target">🥶</div>
+  </div>
+  <div class="splat">999</div>
+
+  <div class="fw" style="top:24%;left:6%">🎆</div>
+  <div class="fw" style="top:16%;right:6%;animation-delay:1.2s">🎆</div>
+
+  <div class="ground" aria-hidden="true"></div>
+
+  <div class="chatbox">
+    <div><span class="u">Ektomorf44:</span> <span class="r">Falcon. Falcon 36.</span></div>
+    <div><span class="m">Congratulations! Your Magic level is now 999.</span></div>
+    <div><span class="g">Ektomorf44 has defeated the upload schedule. The Countach trembles.</span></div>
+    <div><span class="green">Mr LOL778 would be proud. Watched every second · liked · subbed to Extra.</span></div>
+    <div><span class="u">*</span> <b>press anywhere to re-cast</b></div>
+  </div>
+</div>
+
+<div class="hint">
+  SCREENSHOT THIS → SEND TO STEVE ·<br>
+  part of the <a href="./">countach countdown</a> tracker
+</div>
+
+<script>
+  // re-trigger the cast on tap
+  document.getElementById('scene').addEventListener('click', function(){
+    document.querySelectorAll('.orb,.splat,.block').forEach(function(el){
+      el.style.animation='none'; void el.offsetWidth; el.style.animation='';
+    });
+  });
+</script>
+</body>
+</html>
