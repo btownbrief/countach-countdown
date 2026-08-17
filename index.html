@@ -208,6 +208,55 @@
   .deadline-line{margin-top:1rem;text-align:center;font-size:.85rem;color:#b9bce4;font-family:system-ui,sans-serif}
   .deadline-line b{color:var(--neon-yellow);font-family:'Orbitron',sans-serif}
 
+  /* live stats */
+  #liveSec{display:none}
+  .updated{
+    margin-left:auto;
+    font-family:'Press Start 2P',monospace;font-size:.5rem;letter-spacing:.12em;
+    color:#8f93c9;text-transform:none;
+  }
+  .live-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1rem}
+  .stat{
+    background:var(--panel);
+    border:2px solid rgba(25,227,255,.45);
+    border-radius:12px;
+    padding:1.15rem 1.2rem 1.05rem;
+    box-shadow:0 0 18px rgba(25,227,255,.14), inset 0 0 22px rgba(25,227,255,.04);
+  }
+  .stat .lbl{font-size:.62rem;letter-spacing:.28em;color:#8f93c9;text-transform:uppercase;margin-bottom:.6rem}
+  .stat .val{
+    font-family:'Press Start 2P',monospace;
+    font-size:clamp(1.05rem,3.6vw,1.55rem);
+    color:var(--neon-cyan);text-shadow:0 0 14px rgba(25,227,255,.8);
+    font-variant-numeric:tabular-nums;
+  }
+  .stat .note{margin-top:.55rem;font-size:.78rem;color:#b9bce4;line-height:1.5;font-family:system-ui,sans-serif}
+  .stat.gold .val{color:var(--neon-yellow);text-shadow:0 0 14px rgba(255,210,31,.7)}
+  .bar{
+    margin-top:.7rem;height:12px;border-radius:6px;
+    background:rgba(25,227,255,.12);
+    border:1px solid rgba(25,227,255,.3);
+    overflow:hidden;
+  }
+  .bar i{
+    display:block;height:100%;width:0;
+    background:linear-gradient(90deg,var(--neon-cyan),#7bd8ff);
+    box-shadow:0 0 12px rgba(25,227,255,.8);
+    transition:width 1.4s cubic-bezier(.2,.8,.2,1);
+  }
+  .bar-lbl{display:flex;justify-content:space-between;margin-top:.35rem;font-size:.7rem;color:#8f93c9;font-family:system-ui,sans-serif}
+  .latest{
+    margin-top:1rem;
+    background:var(--panel);
+    border:1px solid rgba(120,110,220,.35);
+    border-left:5px solid var(--neon-green);
+    border-radius:10px;
+    padding:.85rem 1.1rem;
+    font-size:.88rem;line-height:1.6;font-family:system-ui,sans-serif;color:#cfd0ea;
+  }
+  .latest a{color:var(--neon-cyan);text-decoration:none;font-weight:700}
+  .latest b{color:var(--neon-green)}
+
   /* stakes cards */
   .stakes{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:1rem}
   .card{
@@ -353,6 +402,34 @@
     <div class="deadline-line">Next deadline: <b id="nextDeadline"></b> · end of day Eastern</div>
   </section>
 
+  <section id="liveSec">
+    <div class="sec-title">Live From The Video<span class="updated" id="updatedChip"></span></div>
+    <div class="live-grid">
+      <div class="stat">
+        <div class="lbl">Views</div>
+        <div class="val" id="stViews">—</div>
+        <div class="bar"><i id="viewBar"></i></div>
+        <div class="bar-lbl"><span id="viewPct"></span><span>goal he called: 2M — no bots</span></div>
+      </div>
+      <div class="stat gold">
+        <div class="lbl">Likes = Lambo Entries</div>
+        <div class="val" id="stLikes">—</div>
+        <div class="note">Every like is a ticket in the Countach drawing. Odds right now: <b id="stOdds">—</b>.</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">Comments</div>
+        <div class="val" id="stComments">—</div>
+        <div class="note">The section is a falcon sanctuary.</div>
+      </div>
+      <div class="stat">
+        <div class="lbl">@SteveWillDoItExtra subs</div>
+        <div class="val" id="stExtra">—</div>
+        <div class="note">Live shows every Thursday once football starts.</div>
+      </div>
+    </div>
+    <div class="latest" id="latestBox"></div>
+  </section>
+
   <section>
     <div class="sec-title">The Stakes</div>
     <div class="stakes">
@@ -372,8 +449,8 @@
 
 <footer>
   <div class="credit">FAN-MADE TRACKER · NOT AFFILIATED</div>
-  Built in Burlington, VT by <a href="https://www.instagram.com/btownbrief/" rel="noopener">@btownbrief</a> — the guy runs a local newsletter and builds games at <a href="https://play.btownbrief.com" rel="noopener">play.btownbrief.com</a>.<br>
-  No entries collected here. No affiliation with Steve. Giveaway terms are whatever Steve said in the video.
+  Made in Burlington, VT by <a href="https://www.instagram.com/btownbrief/" rel="noopener">@btownbrief</a> — I run a local newsletter and build games at <a href="https://play.btownbrief.com" rel="noopener">play.btownbrief.com</a>.<br>
+  Not affiliated with Steve. No entries collected here — the giveaway is whatever the man said on camera.
   <div class="egg-hint">psst — try typing the bird.</div>
 </footer>
 
@@ -496,6 +573,9 @@
     tapTimer = setTimeout(function(){ taps = 0; }, 700);
     if (taps >= 3){ flyFalcon(); taps = 0; }
   });
+
+  window.CC = {DEADLINES:DEADLINES, endOfDayET:endOfDayET, sched:ul,
+               statusHead:head, statusText:text, statusBox:box, nextIdx:nextIdx};
 })();
 </script>
 
@@ -691,6 +771,94 @@ try{
 }catch(err){
   console.warn('3D failed, page still fine:', err);
 }
+</script>
+
+<script>
+(function(){
+  fetch('data/stats.json', {cache:'no-store'}).then(function(r){
+    if(!r.ok) throw 0; return r.json();
+  }).then(function(d){
+    var sec = document.getElementById('liveSec');
+    sec.style.display = 'block';
+    var n = function(x){ return (x==null)? '—' : x.toLocaleString('en-US'); };
+
+    // count-up animation for the hero numbers
+    function countUp(el, target){
+      var t0 = performance.now(), dur = 1300;
+      (function step(t){
+        var p = Math.min(1,(t-t0)/dur), e = 1-Math.pow(1-p,3);
+        el.textContent = Math.round(target*e).toLocaleString('en-US');
+        if(p<1) requestAnimationFrame(step);
+      })(t0);
+    }
+    countUp(document.getElementById('stViews'), d.video.views);
+    countUp(document.getElementById('stLikes'), d.video.likes);
+    countUp(document.getElementById('stComments'), d.video.comments);
+    if (d.channels && d.channels.extra) countUp(document.getElementById('stExtra'), d.channels.extra.subs);
+
+    var pct = Math.min(100, d.video.views/2e6*100);
+    setTimeout(function(){ document.getElementById('viewBar').style.width = pct+'%'; }, 150);
+    document.getElementById('viewPct').textContent = pct.toFixed(1)+'% of 2M';
+    document.getElementById('stOdds').textContent = '1 in ' + n(d.video.likes);
+
+    var mins = Math.max(0, Math.round((Date.now()-Date.parse(d.fetchedAt))/6e4));
+    document.getElementById('updatedChip').textContent =
+      mins < 60 ? 'updated '+mins+' min ago' : 'updated '+Math.round(mins/60)+'h ago';
+
+    // latest upload + auto-survival
+    var ups = (d.uploads||[]).slice();
+    var latest = ups[0];
+    if (latest){
+      var when = new Date(latest.publishedAt);
+      var days = Math.floor((Date.now()-when)/864e5);
+      document.getElementById('latestBox').innerHTML =
+        '<b>Latest upload:</b> <a href="https://www.youtube.com/watch?v='+latest.id+'" rel="noopener">'+
+        latest.title.replace(/[<>&]/g,'')+'</a> — '+
+        when.toLocaleDateString('en-US',{month:'short',day:'numeric'})+
+        (days<=0?' (today)':' ('+days+' day'+(days===1?'':'s')+' ago)');
+    }
+
+    if (!window.CC) return;
+    var CC = window.CC;
+    function uploadedInWindow(i){
+      var end = CC.endOfDayET(CC.DEADLINES[i]);
+      var start = new Date(end - 14*864e5);
+      return ups.some(function(u){
+        var t = new Date(u.publishedAt);
+        return t > start && t <= end;
+      });
+    }
+    var lis = CC.sched.querySelectorAll('li');
+    CC.DEADLINES.forEach(function(dl,i){
+      var tag = lis[i] && lis[i].querySelector('.tag');
+      if (!tag) return;
+      var done = uploadedInWindow(i);
+      if (i < CC.nextIdx || CC.nextIdx === -1){
+        tag.textContent = done ? 'SURVIVED \u2714' : 'MISSED?!';
+        tag.className = 'tag ' + (done ? 'survived' : 'finale');
+      } else if (i === CC.nextIdx && done){
+        tag.textContent = 'ALREADY POSTED \u2714';
+        tag.className = 'tag survived';
+      }
+    });
+    if (CC.nextIdx >= 0 && uploadedInWindow(CC.nextIdx)){
+      CC.statusBox.classList.remove('danger');
+      CC.statusHead.textContent = 'SAFE \u2014 VIDEO IS UP';
+      CC.statusText.textContent = 'This cycle\u2019s video already dropped. The Countach sleeps easy until the next deadline.';
+    }
+  }).catch(function(){ /* stats not wired yet; section stays hidden */ });
+})();
+</script>
+
+<script>
+// if the 3D module was blocked (e.g. opening the file directly), say so instead of empty sky
+setTimeout(function(){
+  var w = document.getElementById('carWrap');
+  if (w && !w.querySelector('canvas')){
+    var h = w.querySelector('.drag-hint');
+    if (h) h.textContent = '3D CAR NEEDS THE LIVE SITE \u2192 PLAY.BTOWNBRIEF.COM/COUNTACH-COUNTDOWN';
+  }
+}, 3500);
 </script>
 </body>
 </html>
