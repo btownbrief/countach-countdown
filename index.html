@@ -336,50 +336,91 @@
         </linearGradient>
       </defs>
       <!-- ground glow -->
-      <ellipse cx="360" cy="212" rx="330" ry="14" fill="rgba(255,45,120,.25)"/>
-      <!-- rear wing -->
-      <polygon points="96,96 176,88 186,100 106,108" fill="#3a0d22" stroke="#ff2d78" stroke-width="2"/>
-      <polygon points="128,100 140,100 132,140 122,140" fill="#3a0d22" stroke="#ff2d78" stroke-width="1.5"/>
-      <!-- the wedge -->
-      <polygon points="60,178 90,140 150,128 250,110 420,96 560,110 668,148 700,178 690,196 70,196"
+      <ellipse cx="380" cy="212" rx="340" ry="14" fill="rgba(255,45,120,.25)"/>
+
+      <!-- rear wing: high V-wing on struts -->
+      <polygon points="90,70 236,58 248,70 102,82" fill="#40102a" stroke="#ff2d78" stroke-width="2" stroke-linejoin="round"/>
+      <polygon points="138,78 152,77 160,108 148,110" fill="#2c0b1d" stroke="#ff2d78" stroke-width="1.5"/>
+      <polygon points="196,73 210,72 206,102 194,104" fill="#2c0b1d" stroke="#ff2d78" stroke-width="1.5"/>
+
+      <!-- body: one long wedge line nose->windshield, cab-forward, kamm tail -->
+      <polygon points="712,178 714,166 708,150 470,114 402,82 322,82 240,100 150,112 108,118 104,146 108,174 124,182 690,182"
                fill="url(#bodyg)" stroke="#ff8fb4" stroke-width="2.5" stroke-linejoin="round"/>
-      <!-- cabin glass -->
-      <polygon points="252,112 300,78 402,74 470,98 420,98 262,110" fill="url(#glassg)" stroke="#bfefff" stroke-width="2" stroke-linejoin="round"/>
-      <!-- NACA duct -->
-      <polygon points="330,140 430,134 452,158 342,162" fill="#5c0f2c" stroke="#ff8fb4" stroke-width="1.5"/>
-      <!-- side line -->
-      <line x1="96" y1="168" x2="668" y2="168" stroke="#ffb3cd" stroke-width="2" opacity=".6"/>
-      <!-- pop-up headlight -->
-      <polygon points="622,124 662,138 668,150 626,140" fill="#ffd21f" stroke="#fff1b0" stroke-width="1.5">
+
+      <!-- windshield + side glass, steeply raked, nearly one line with hood -->
+      <polygon points="474,116 408,86 402,90 462,120" fill="url(#glassg)" stroke="#bfefff" stroke-width="1.5"/>
+      <polygon points="456,120 398,90 330,90 318,112 380,118" fill="url(#glassg)" stroke="#bfefff" stroke-width="1.5" stroke-linejoin="round"/>
+
+      <!-- engine deck louvres -->
+      <g stroke="#7a1030" stroke-width="4" opacity=".9">
+        <line x1="304" y1="90" x2="286" y2="104"/>
+        <line x1="284" y1="93" x2="266" y2="107"/>
+        <line x1="264" y1="96" x2="246" y2="110"/>
+        <line x1="244" y1="100" x2="226" y2="113"/>
+        <line x1="224" y1="103" x2="206" y2="116"/>
+      </g>
+
+      <!-- shoulder intake box behind the door -->
+      <polygon points="308,108 352,106 356,142 312,144" fill="#5c0f2c" stroke="#ff8fb4" stroke-width="1.5"/>
+      <g stroke="#ff8fb4" stroke-width="1.5" opacity=".7">
+        <line x1="318" y1="109" x2="320" y2="143"/>
+        <line x1="330" y1="108" x2="332" y2="143"/>
+        <line x1="342" y1="107" x2="344" y2="142"/>
+      </g>
+
+      <!-- NACA duct low on the door -->
+      <polygon points="392,152 458,148 470,166 402,168" fill="#5c0f2c" stroke="#ff8fb4" stroke-width="1.5"/>
+
+      <!-- rocker / side-skirt line -->
+      <line x1="124" y1="170" x2="700" y2="170" stroke="#ffb3cd" stroke-width="2" opacity=".5"/>
+
+      <!-- wheel-arch openings -->
+      <polygon points="152,182 158,144 186,134 222,138 244,162 248,182" fill="#12060f"/>
+      <polygon points="512,182 520,148 550,140 584,144 602,166 606,182" fill="#12060f"/>
+
+      <!-- wheels: telephone dials (5 round holes) -->
+      <g>
+        <circle cx="200" cy="178" r="35" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
+        <circle cx="200" cy="178" r="24" fill="#1c1030" stroke="#19e3ff" stroke-width="1.5"/>
+        <g fill="#0a0512" stroke="#19e3ff" stroke-width="1.5">
+          <circle cx="200" cy="164" r="5.5"/><circle cx="213" cy="174" r="5.5"/>
+          <circle cx="208" cy="190" r="5.5"/><circle cx="192" cy="190" r="5.5"/>
+          <circle cx="187" cy="174" r="5.5"/>
+        </g>
+        <circle cx="200" cy="178" r="6" fill="#19e3ff"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 200 178" to="360 200 178" dur="1.1s" repeatCount="indefinite"/>
+      </g>
+      <g>
+        <circle cx="560" cy="178" r="33" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
+        <circle cx="560" cy="178" r="22" fill="#1c1030" stroke="#19e3ff" stroke-width="1.5"/>
+        <g fill="#0a0512" stroke="#19e3ff" stroke-width="1.5">
+          <circle cx="560" cy="165" r="5"/><circle cx="572" cy="174" r="5"/>
+          <circle cx="567" cy="189" r="5"/><circle cx="553" cy="189" r="5"/>
+          <circle cx="548" cy="174" r="5"/>
+        </g>
+        <circle cx="560" cy="178" r="5.5" fill="#19e3ff"/>
+        <animateTransform attributeName="transform" type="rotate" from="0 560 178" to="360 560 178" dur="1.1s" repeatCount="indefinite"/>
+      </g>
+
+      <!-- trapezoid box flares over the arches (the signature) -->
+      <polyline points="144,176 154,140 188,128 226,132 250,158 252,176" fill="none" stroke="#ff8fb4" stroke-width="3" stroke-linejoin="round"/>
+      <polyline points="506,176 516,144 548,134 586,138 606,162 610,176" fill="none" stroke="#ff8fb4" stroke-width="3" stroke-linejoin="round"/>
+
+      <!-- tail: lights + twin exhaust -->
+      <rect x="104" y="126" width="8" height="16" fill="#ffd21f" stroke="#c98a3d" stroke-width="1"/>
+      <rect x="104" y="146" width="8" height="12" fill="#ff3b3b" stroke="#8e0a34" stroke-width="1"/>
+      <rect x="106" y="164" width="14" height="5" fill="#2a2a3a" stroke="#8f93c9" stroke-width="1"/>
+
+      <!-- pop-up headlight (raised) + fixed marker light on the low nose -->
+      <polygon points="640,132 664,136 664,124 644,121" fill="#2c0b1d" stroke="#ff8fb4" stroke-width="1.5"/>
+      <rect x="646" y="124" width="16" height="9" fill="#ffd21f" stroke="#fff1b0" stroke-width="1">
         <animate attributeName="opacity" values="1;1;.25;1;1" dur="4s" repeatCount="indefinite"/>
-      </polygon>
+      </rect>
+      <polygon points="676,146 706,152 704,160 676,155" fill="#ff9d3c" stroke="#ffd0a0" stroke-width="1"/>
       <!-- headlight beam -->
-      <polygon points="666,138 760,120 760,168 672,152" fill="rgba(255,210,31,.16)">
+      <polygon points="664,124 760,104 760,150 666,136 664,124" fill="rgba(255,210,31,.14)">
         <animate attributeName="opacity" values=".9;.9;.15;.9;.9" dur="4s" repeatCount="indefinite"/>
       </polygon>
-      <!-- wheels: telephone dials -->
-      <g>
-        <circle cx="188" cy="192" r="34" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
-        <circle cx="188" cy="192" r="17" fill="#1c1030" stroke="#19e3ff" stroke-width="2"/>
-        <g stroke="#19e3ff" stroke-width="2.5">
-          <line x1="188" y1="175" x2="188" y2="163"/><line x1="188" y1="209" x2="188" y2="221"/>
-          <line x1="171" y1="192" x2="159" y2="192"/><line x1="205" y1="192" x2="217" y2="192"/>
-          <line x1="176" y1="180" x2="168" y2="172"/><line x1="200" y1="204" x2="208" y2="212"/>
-          <line x1="200" y1="180" x2="208" y2="172"/><line x1="176" y1="204" x2="168" y2="212"/>
-        </g>
-        <animateTransform attributeName="transform" type="rotate" from="0 188 192" to="360 188 192" dur="1.1s" repeatCount="indefinite"/>
-      </g>
-      <g>
-        <circle cx="566" cy="192" r="34" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
-        <circle cx="566" cy="192" r="17" fill="#1c1030" stroke="#19e3ff" stroke-width="2"/>
-        <g stroke="#19e3ff" stroke-width="2.5">
-          <line x1="566" y1="175" x2="566" y2="163"/><line x1="566" y1="209" x2="566" y2="221"/>
-          <line x1="549" y1="192" x2="537" y2="192"/><line x1="583" y1="192" x2="595" y2="192"/>
-          <line x1="554" y1="180" x2="546" y2="172"/><line x1="578" y1="204" x2="586" y2="212"/>
-          <line x1="578" y1="180" x2="586" y2="172"/><line x1="554" y1="204" x2="546" y2="212"/>
-        </g>
-        <animateTransform attributeName="transform" type="rotate" from="0 566 192" to="360 566 192" dur="1.1s" repeatCount="indefinite"/>
-      </g>
     </svg>
   </div>
   <div class="scroll-hint">▼ SCROLL ▼</div>
