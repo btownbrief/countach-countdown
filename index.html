@@ -112,17 +112,22 @@
   /* ---------- countach svg ---------- */
   .car-wrap{
     position:relative;z-index:1;
-    width:min(92vw,760px);
+    width:min(94vw,780px);
+    height:clamp(240px,42vw,360px);
     margin-top:auto;
-    margin-bottom:calc(23svh - 40px);
-    animation:hover 3.4s ease-in-out infinite;
+    margin-bottom:calc(23svh - 60px);
+    cursor:grab;
   }
-  @keyframes hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
-  .car-wrap svg{width:100%;height:auto;display:block;overflow:visible}
-  .speedline{stroke:var(--neon-cyan);stroke-width:3;stroke-linecap:round;opacity:0;animation:zip 1.15s linear infinite}
-  .speedline.s2{animation-delay:.4s;stroke:var(--neon-pink)}
-  .speedline.s3{animation-delay:.75s;stroke:var(--neon-yellow)}
-  @keyframes zip{0%{opacity:0;transform:translateX(60px)}15%{opacity:.9}60%{opacity:.5}100%{opacity:0;transform:translateX(-260px)}}
+  .car-wrap:active{cursor:grabbing}
+  .car-wrap canvas{width:100%!important;height:100%!important;display:block;touch-action:pan-y}
+  .drag-hint{
+    position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+    font-family:'Press Start 2P',monospace;font-size:.5rem;letter-spacing:.25em;
+    color:rgba(25,227,255,.85);text-shadow:0 0 10px rgba(25,227,255,.7);
+    white-space:nowrap;pointer-events:none;
+    animation:hintfade 1.8s ease-in-out infinite alternate;
+  }
+  @keyframes hintfade{from{opacity:.45}to{opacity:1}}
 
   .scroll-hint{
     position:absolute;bottom:1rem;left:50%;transform:translateX(-50%);
@@ -318,110 +323,8 @@
   <h1>Countach<br>Countdown</h1>
   <p class="tagline">Steve signed his soul to the upload schedule. Miss <b>one</b> every-other-Sunday video before the Super Bowl and somebody who liked the video drives home a <b>1989 Lamborghini Countach</b>. This page never sleeps.</p>
 
-  <div class="car-wrap" aria-hidden="true">
-    <svg viewBox="0 0 760 240">
-      <!-- speed lines -->
-      <line class="speedline"    x1="600" y1="120" x2="740" y2="120"/>
-      <line class="speedline s2" x1="620" y1="150" x2="750" y2="150"/>
-      <line class="speedline s3" x1="590" y1="90"  x2="730" y2="90"/>
-      <defs>
-        <linearGradient id="bodyg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stop-color="#ff5b8f"/>
-          <stop offset=".55" stop-color="#e01345"/>
-          <stop offset="1" stop-color="#8e0a34"/>
-        </linearGradient>
-        <linearGradient id="glassg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stop-color="#9be9ff"/>
-          <stop offset="1" stop-color="#1a4d8f"/>
-        </linearGradient>
-      </defs>
-      <!-- ground glow -->
-      <ellipse cx="380" cy="212" rx="340" ry="14" fill="rgba(255,45,120,.25)"/>
-
-      <!-- rear wing: high V-wing on struts -->
-      <polygon points="90,70 236,58 248,70 102,82" fill="#40102a" stroke="#ff2d78" stroke-width="2" stroke-linejoin="round"/>
-      <polygon points="138,78 152,77 160,108 148,110" fill="#2c0b1d" stroke="#ff2d78" stroke-width="1.5"/>
-      <polygon points="196,73 210,72 206,102 194,104" fill="#2c0b1d" stroke="#ff2d78" stroke-width="1.5"/>
-
-      <!-- body: one long wedge line nose->windshield, cab-forward, kamm tail -->
-      <polygon points="712,178 714,166 708,150 470,114 402,82 322,82 240,100 150,112 108,118 104,146 108,174 124,182 690,182"
-               fill="url(#bodyg)" stroke="#ff8fb4" stroke-width="2.5" stroke-linejoin="round"/>
-
-      <!-- windshield + side glass, steeply raked, nearly one line with hood -->
-      <polygon points="474,116 408,86 402,90 462,120" fill="url(#glassg)" stroke="#bfefff" stroke-width="1.5"/>
-      <polygon points="456,120 398,90 330,90 318,112 380,118" fill="url(#glassg)" stroke="#bfefff" stroke-width="1.5" stroke-linejoin="round"/>
-
-      <!-- engine deck louvres -->
-      <g stroke="#7a1030" stroke-width="4" opacity=".9">
-        <line x1="304" y1="90" x2="286" y2="104"/>
-        <line x1="284" y1="93" x2="266" y2="107"/>
-        <line x1="264" y1="96" x2="246" y2="110"/>
-        <line x1="244" y1="100" x2="226" y2="113"/>
-        <line x1="224" y1="103" x2="206" y2="116"/>
-      </g>
-
-      <!-- shoulder intake box behind the door -->
-      <polygon points="308,108 352,106 356,142 312,144" fill="#5c0f2c" stroke="#ff8fb4" stroke-width="1.5"/>
-      <g stroke="#ff8fb4" stroke-width="1.5" opacity=".7">
-        <line x1="318" y1="109" x2="320" y2="143"/>
-        <line x1="330" y1="108" x2="332" y2="143"/>
-        <line x1="342" y1="107" x2="344" y2="142"/>
-      </g>
-
-      <!-- NACA duct low on the door -->
-      <polygon points="392,152 458,148 470,166 402,168" fill="#5c0f2c" stroke="#ff8fb4" stroke-width="1.5"/>
-
-      <!-- rocker / side-skirt line -->
-      <line x1="124" y1="170" x2="700" y2="170" stroke="#ffb3cd" stroke-width="2" opacity=".5"/>
-
-      <!-- wheel-arch openings -->
-      <polygon points="152,182 158,144 186,134 222,138 244,162 248,182" fill="#12060f"/>
-      <polygon points="512,182 520,148 550,140 584,144 602,166 606,182" fill="#12060f"/>
-
-      <!-- wheels: telephone dials (5 round holes) -->
-      <g>
-        <circle cx="200" cy="178" r="35" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
-        <circle cx="200" cy="178" r="24" fill="#1c1030" stroke="#19e3ff" stroke-width="1.5"/>
-        <g fill="#0a0512" stroke="#19e3ff" stroke-width="1.5">
-          <circle cx="200" cy="164" r="5.5"/><circle cx="213" cy="174" r="5.5"/>
-          <circle cx="208" cy="190" r="5.5"/><circle cx="192" cy="190" r="5.5"/>
-          <circle cx="187" cy="174" r="5.5"/>
-        </g>
-        <circle cx="200" cy="178" r="6" fill="#19e3ff"/>
-        <animateTransform attributeName="transform" type="rotate" from="0 200 178" to="360 200 178" dur="1.1s" repeatCount="indefinite"/>
-      </g>
-      <g>
-        <circle cx="560" cy="178" r="33" fill="#120818" stroke="#19e3ff" stroke-width="3"/>
-        <circle cx="560" cy="178" r="22" fill="#1c1030" stroke="#19e3ff" stroke-width="1.5"/>
-        <g fill="#0a0512" stroke="#19e3ff" stroke-width="1.5">
-          <circle cx="560" cy="165" r="5"/><circle cx="572" cy="174" r="5"/>
-          <circle cx="567" cy="189" r="5"/><circle cx="553" cy="189" r="5"/>
-          <circle cx="548" cy="174" r="5"/>
-        </g>
-        <circle cx="560" cy="178" r="5.5" fill="#19e3ff"/>
-        <animateTransform attributeName="transform" type="rotate" from="0 560 178" to="360 560 178" dur="1.1s" repeatCount="indefinite"/>
-      </g>
-
-      <!-- trapezoid box flares over the arches (the signature) -->
-      <polyline points="144,176 154,140 188,128 226,132 250,158 252,176" fill="none" stroke="#ff8fb4" stroke-width="3" stroke-linejoin="round"/>
-      <polyline points="506,176 516,144 548,134 586,138 606,162 610,176" fill="none" stroke="#ff8fb4" stroke-width="3" stroke-linejoin="round"/>
-
-      <!-- tail: lights + twin exhaust -->
-      <rect x="104" y="126" width="8" height="16" fill="#ffd21f" stroke="#c98a3d" stroke-width="1"/>
-      <rect x="104" y="146" width="8" height="12" fill="#ff3b3b" stroke="#8e0a34" stroke-width="1"/>
-      <rect x="106" y="164" width="14" height="5" fill="#2a2a3a" stroke="#8f93c9" stroke-width="1"/>
-
-      <!-- pop-up headlight (raised) + fixed marker light on the low nose -->
-      <polygon points="640,132 664,136 664,124 644,121" fill="#2c0b1d" stroke="#ff8fb4" stroke-width="1.5"/>
-      <rect x="646" y="124" width="16" height="9" fill="#ffd21f" stroke="#fff1b0" stroke-width="1">
-        <animate attributeName="opacity" values="1;1;.25;1;1" dur="4s" repeatCount="indefinite"/>
-      </rect>
-      <polygon points="676,146 706,152 704,160 676,155" fill="#ff9d3c" stroke="#ffd0a0" stroke-width="1"/>
-      <!-- headlight beam -->
-      <polygon points="664,124 760,104 760,150 666,136 664,124" fill="rgba(255,210,31,.14)">
-        <animate attributeName="opacity" values=".9;.9;.15;.9;.9" dur="4s" repeatCount="indefinite"/>
-      </polygon>
-    </svg>
+  <div class="car-wrap" id="carWrap">
+    <div class="drag-hint">◀ DRAG THE CAR ▶</div>
   </div>
   <div class="scroll-hint">▼ SCROLL ▼</div>
 </div>
@@ -594,6 +497,200 @@
     if (taps >= 3){ flyFalcon(); taps = 0; }
   });
 })();
+</script>
+
+<script type="module">
+import * as THREE from './vendor/three.module.min.js';
+
+const wrap = document.getElementById('carWrap');
+try{
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+  wrap.prepend(renderer.domElement);
+
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(30, wrap.clientWidth/wrap.clientHeight, .1, 100);
+
+  scene.add(new THREE.AmbientLight(0x8877aa, 1.1));
+  const key = new THREE.DirectionalLight(0xffffff, 2.2); key.position.set(5,7,4); scene.add(key);
+  const rimP = new THREE.PointLight(0xff2d78, 60); rimP.position.set(-6,2.5,-5); scene.add(rimP);
+  const rimC = new THREE.PointLight(0x19e3ff, 45); rimC.position.set(5,1.2,-6); scene.add(rimC);
+
+  const car = new THREE.Group(); scene.add(car);
+  const HW = 1.18;                       // half width of body extrusion
+  const matBody  = new THREE.MeshStandardMaterial({color:0xd81140, metalness:.45, roughness:.35, flatShading:true});
+  const matDark  = new THREE.MeshStandardMaterial({color:0x14060f, metalness:.2, roughness:.7});
+  const matGlass = new THREE.MeshStandardMaterial({color:0x0b1d33, metalness:.9, roughness:.15});
+  const matTan   = new THREE.MeshStandardMaterial({color:0xd9b98c, roughness:.8});
+  const edgePink = new THREE.LineBasicMaterial({color:0xff8fb4, transparent:true, opacity:.85});
+  const edgeCyan = new THREE.LineBasicMaterial({color:0x19e3ff, transparent:true, opacity:.8});
+
+  // ---- body profile (nose = +x), wheel arches cut into the bottom edge ----
+  const top = [
+    [3.12,.35],[3.14,.47],[3.08,.63],      // low nose
+    [.70,.99],                              // hood line to windshield base
+    [.02,1.31],[-.78,1.31],                 // windshield -> roof
+    [-1.60,1.13],[-2.50,1.01],              // engine deck slope
+    [-2.92,.95],[-2.96,.67],[-2.92,.39],   // kamm tail
+    [-2.76,.31]
+  ];
+  const shape = new THREE.Shape();
+  shape.moveTo(top[0][0], top[0][1]);
+  for(let i=top.length-1;i>=0;i--); // noop guard
+  for(let i=1;i<top.length;i++) shape.lineTo(top[i][0], top[i][1]);
+  function arch(cx,r){ for(let a=0;a<=10;a++){const t=Math.PI-a*Math.PI/10; shape.lineTo(cx+r*Math.cos(t), .31+r*.92*Math.sin(t));}}
+  shape.lineTo(-2.48,.31); arch(-2.0,.50);
+  shape.lineTo(1.14,.31);  arch(1.6,.46);
+  shape.lineTo(2.90,.31);  shape.closePath();
+
+  const bodyGeo = new THREE.ExtrudeGeometry(shape,{depth:HW*2, bevelEnabled:true, bevelThickness:.07, bevelSize:.07, bevelSegments:2, curveSegments:6});
+  bodyGeo.translate(0,0,-HW);
+  const body = new THREE.Mesh(bodyGeo, matBody); car.add(body);
+  car.add(new THREE.LineSegments(new THREE.EdgesGeometry(bodyGeo,28), edgePink));
+
+  // ---- greenhouse glass sliver on top ----
+  const gs = new THREE.Shape();
+  [[.80,.955],[.04,1.30],[-.76,1.30],[-1.34,1.115],[-.80,1.07],[.20,1.00]].forEach((p,i)=> i? gs.lineTo(p[0],p[1]+.02) : gs.moveTo(p[0],p[1]+.02));
+  gs.closePath();
+  const gGeo = new THREE.ExtrudeGeometry(gs,{depth:HW*2-.28, bevelEnabled:false});
+  gGeo.translate(0,0,-(HW-.14));
+  const glass = new THREE.Mesh(gGeo, matGlass); car.add(glass);
+  car.add(new THREE.LineSegments(new THREE.EdgesGeometry(gGeo,20), edgeCyan));
+
+  // ---- per-side details ----
+  function quad(pts, z, mat){
+    const g = new THREE.BufferGeometry();
+    const v = [];
+    [[0,1,2],[0,2,3]].forEach(t=>t.forEach(i=>v.push(pts[i][0],pts[i][1],z)));
+    g.setAttribute('position', new THREE.Float32BufferAttribute(v,3));
+    g.computeVertexNormals();
+    const m = new THREE.Mesh(g, mat); m.material = mat.clone(); m.material.side = THREE.DoubleSide;
+    car.add(m); return m;
+  }
+  const zOut = HW+.075;
+  [-1,1].forEach(s=>{
+    // side window
+    quad([[.58,1.00],[.04,1.265],[-.72,1.265],[-1.24,1.065]], s*zOut- s*.005, matGlass);
+    // NACA duct low on the door
+    quad([[.70,.47],[.58,.66],[-.06,.62],[.02,.45]], s*(zOut+.002), matDark);
+    // rear tele-dial shoulder intake box
+    const box = new THREE.Mesh(new THREE.BoxGeometry(.5,.34,.22), matBody);
+    box.position.set(-.62,1.06,s*(HW-.02));
+    car.add(box);
+    car.add(new THREE.LineSegments(new THREE.EdgesGeometry(box.geometry), edgePink).translateX(-.62).translateY(1.06).translateZ(s*(HW-.02)));
+    const grille = new THREE.Mesh(new THREE.BoxGeometry(.4,.24,.05), matDark);
+    grille.position.set(-.62,1.08,s*(HW+.08)); car.add(grille);
+  });
+
+  // ---- engine-deck louvres ----
+  for(let i=0;i<5;i++){
+    const x = -1.05 - i*.28;
+    const y = 1.31 + (x+.78)*(1.13-1.31)/(-1.60+.78) + .015;
+    const l = new THREE.Mesh(new THREE.BoxGeometry(.10,.045,1.55), matDark);
+    l.position.set(x,y,0); l.rotation.z = -.19; car.add(l);
+  }
+
+  // ---- rear wing ----
+  const wing = new THREE.Mesh(new THREE.BoxGeometry(.62,.06,2.35), matBody);
+  wing.position.set(-2.62,1.52,0); wing.rotation.z = .16; car.add(wing);
+  car.add(new THREE.LineSegments(new THREE.EdgesGeometry(wing.geometry), edgePink)
+    .translateX(-2.62).translateY(1.52).translateZ(0).rotateZ(.16));
+  [-.78,.78].forEach(z=>{
+    const strut = new THREE.Mesh(new THREE.BoxGeometry(.34,.42,.07), matDark);
+    strut.position.set(-2.52,1.24,z); strut.rotation.z=.35; car.add(strut);
+  });
+
+  // ---- tail panel, lights, exhaust ----
+  const tail = new THREE.Mesh(new THREE.BoxGeometry(.06,.55,2.05), matDark);
+  tail.position.set(-2.955,.66,0); car.add(tail);
+  [-.75,.75].forEach(z=>{
+    const tl = new THREE.Mesh(new THREE.BoxGeometry(.05,.2,.42), new THREE.MeshStandardMaterial({color:0xff2020, emissive:0xaa0000}));
+    tl.position.set(-2.985,.72,z); car.add(tl);
+  });
+  [-.9,-.62,.62,.9].forEach(z=>{
+    const ex = new THREE.Mesh(new THREE.CylinderGeometry(.055,.055,.16,10), matDark);
+    ex.rotation.z=Math.PI/2; ex.position.set(-2.95,.30,z); car.add(ex);
+  });
+
+  // ---- pop-up headlights + amber markers on the nose ----
+  [-.62,.62].forEach(z=>{
+    const pod = new THREE.Mesh(new THREE.BoxGeometry(.34,.13,.4), matBody);
+    pod.position.set(2.42,.79,z); pod.rotation.z=.28; car.add(pod);
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(.1,.09,.32), new THREE.MeshStandardMaterial({color:0xffd21f, emissive:0xffa500, emissiveIntensity:.8}));
+    lamp.position.set(2.55,.86,z); car.add(lamp);
+    const marker = new THREE.Mesh(new THREE.BoxGeometry(.06,.09,.3), new THREE.MeshStandardMaterial({color:0xff9d3c, emissive:0x884400}));
+    marker.position.set(3.10,.50,z*1.15); car.add(marker);
+  });
+  // tan interior hint behind windshield
+  const dash = new THREE.Mesh(new THREE.BoxGeometry(.5,.06,1.7), matTan);
+  dash.position.set(.42,1.02,0); car.add(dash);
+
+  // ---- wheels: telephone dials ----
+  function wheel(x, r, z){
+    const g = new THREE.Group();
+    const tire = new THREE.Mesh(new THREE.CylinderGeometry(r,r,.34,24), matDark); g.add(tire);
+    const rim  = new THREE.Mesh(new THREE.CylinderGeometry(r*.62,r*.62,.36,24),
+      new THREE.MeshStandardMaterial({color:0x2a2a44, metalness:.8, roughness:.3})); g.add(rim);
+    const hub  = new THREE.Mesh(new THREE.CylinderGeometry(r*.16,r*.16,.38,12),
+      new THREE.MeshStandardMaterial({color:0x19e3ff, emissive:0x0899bb})); g.add(hub);
+    for(let i=0;i<5;i++){
+      const a=i*Math.PI*2/5;
+      const hole=new THREE.Mesh(new THREE.CylinderGeometry(r*.15,r*.15,.37,10), matDark);
+      hole.position.set(Math.cos(a)*r*.38, 0, Math.sin(a)*r*.38); g.add(hole);
+    }
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(r,.02,6,28), new THREE.MeshBasicMaterial({color:0x19e3ff}));
+    ring.rotation.x=Math.PI/2; ring.position.y = z>0? .18 : -.18; g.add(ring);
+    g.rotation.x = Math.PI/2;
+    g.position.set(x,.42,z);
+    car.add(g); return g;
+  }
+  const wheels = [wheel(-2.0,.46,-1.10), wheel(-2.0,.46,1.10), wheel(1.6,.42,-1.06), wheel(1.6,.42,1.06)];
+
+  // ---- ground shadow ----
+  const sh = new THREE.Mesh(new THREE.CircleGeometry(1,32),
+    new THREE.MeshBasicMaterial({color:0x000000, transparent:true, opacity:.42}));
+  sh.rotation.x=-Math.PI/2; sh.scale.set(3.4,1.45,1); sh.position.y=.01; scene.add(sh);
+
+  // ---- swipe / drag orbit with inertia + auto-rotate ----
+  let yaw=.55, pitch=.30, vyaw=0, vpitch=0, dragging=false, lastX=0, lastY=0, lastMove=0;
+  function place(){
+    const r=10.2;
+    camera.position.set(r*Math.cos(pitch)*Math.sin(yaw), r*Math.sin(pitch)+.3, r*Math.cos(pitch)*Math.cos(yaw));
+    camera.lookAt(0,.58,0);
+  }
+  const el = renderer.domElement;
+  el.addEventListener('pointerdown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;el.setPointerCapture(e.pointerId);});
+  el.addEventListener('pointermove',e=>{
+    if(!dragging) return;
+    vyaw   = (e.clientX-lastX)*.007;
+    vpitch = (e.clientY-lastY)*.004;
+    yaw += vyaw; pitch = Math.min(1.05, Math.max(.06, pitch+vpitch));
+    lastX=e.clientX; lastY=e.clientY; lastMove=performance.now();
+  });
+  ['pointerup','pointercancel','pointerleave'].forEach(ev=>el.addEventListener(ev,()=>dragging=false));
+
+  function resize(){
+    const w=wrap.clientWidth, h=wrap.clientHeight;
+    renderer.setSize(w,h); camera.aspect=w/h; camera.updateProjectionMatrix();
+  }
+  new ResizeObserver(resize).observe(wrap);
+
+  renderer.setAnimationLoop((t)=>{
+    if(!dragging){
+      yaw += vyaw; pitch = Math.min(1.05, Math.max(.06, pitch+vpitch));
+      vyaw*=.94; vpitch*=.90;
+      if(performance.now()-lastMove>2500) yaw += .0032;   // idle auto-rotate
+    }
+    wheels.forEach(w=>w.rotation.y -= .12);
+    car.position.y = Math.sin(t*.0012)*.05;               // gentle hover
+    place();
+    renderer.render(scene,camera);
+  });
+  place();
+}catch(err){
+  console.warn('3D failed, page still fine:', err);
+}
 </script>
 </body>
 </html>
