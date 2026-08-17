@@ -117,10 +117,6 @@
     margin-top:auto;
     margin-bottom:calc(23svh - 60px);
   }
-  .car-wrap.mode-3d{cursor:grab}
-  .car-wrap.mode-3d:active{cursor:grabbing}
-  .car-wrap canvas{width:100%!important;height:100%!important;display:block;touch-action:pan-y}
-  .car-wrap.mode-3d #car2d,.car-wrap:not(.mode-3d) canvas{display:none}
   #car2d{height:100%;display:flex;align-items:flex-end;animation:hover 3.4s ease-in-out infinite}
   #car2d svg{width:100%;height:auto;display:block;overflow:visible}
   @keyframes hover{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
@@ -128,18 +124,18 @@
   .speedline.s2{animation-delay:.4s;stroke:var(--neon-pink)}
   .speedline.s3{animation-delay:.75s;stroke:var(--neon-yellow)}
   @keyframes zip{0%{opacity:0;transform:translateX(60px)}15%{opacity:.9}60%{opacity:.5}100%{opacity:0;transform:translateX(-260px)}}
-  #mode3d{
-    position:absolute;right:0;top:-8px;z-index:3;
-    font-family:'Press Start 2P',monospace;font-size:.52rem;letter-spacing:.14em;
-    color:var(--neon-cyan);background:rgba(13,6,32,.75);
-    border:1px solid rgba(25,227,255,.55);border-radius:8px;
-    padding:.55rem .8rem;cursor:pointer;
-    text-shadow:0 0 8px rgba(25,227,255,.7);
-    box-shadow:0 0 14px rgba(25,227,255,.2);
+  #car3d{
+    position:relative;
+    height:clamp(260px,45vw,400px);
+    cursor:grab;
+    background:radial-gradient(ellipse 70% 60% at 50% 62%, rgba(255,45,120,.14), transparent 70%);
+    border:1px solid rgba(120,110,220,.25);
+    border-radius:14px;
   }
-  #mode3d:hover{background:rgba(25,227,255,.15)}
+  #car3d:active{cursor:grabbing}
+  #car3d canvas{width:100%!important;height:100%!important;display:block;touch-action:pan-y;border-radius:14px}
   .drag-hint{
-    position:absolute;left:50%;bottom:-6px;transform:translateX(-50%);
+    position:absolute;left:50%;bottom:10px;transform:translateX(-50%);
     font-family:'Press Start 2P',monospace;font-size:.5rem;letter-spacing:.25em;
     color:rgba(25,227,255,.85);text-shadow:0 0 10px rgba(25,227,255,.7);
     white-space:nowrap;pointer-events:none;
@@ -493,8 +489,6 @@
         <animate attributeName="opacity" values=".9;.9;.15;.9;.9" dur="4s" repeatCount="indefinite"/>
       </polygon>
     </svg></div>
-    <button id="mode3d" type="button">SPIN IT IN 3D ▶</button>
-    <div class="drag-hint" hidden>◀ DRAG THE CAR ▶</div>
   </div>
   <div class="scroll-hint">▼ SCROLL ▼</div>
 </div>
@@ -560,6 +554,13 @@
       <div class="card"><div class="big red">−$400K</div><div class="sub">What he still owes on it. His words: he can't just "eat the Lambo."</div></div>
     </div>
     <p class="fine">The deal, straight from the video: <b>like the video</b> and you're in. If a scheduled upload doesn't show, one person who liked it gets the Countach. Contract runs through the <b>Super Bowl</b>.</p>
+  </section>
+
+  <section>
+    <div class="sec-title">The Garage</div>
+    <div id="car3d">
+      <div class="drag-hint">◀ DRAG TO SPIN ▶</div>
+    </div>
   </section>
 
   <section>
@@ -701,7 +702,7 @@
 <script type="module">
 import * as THREE from './vendor/three.module.min.js';
 
-const wrap = document.getElementById('carWrap');
+const wrap = document.getElementById('car3d');
 window.__init3D = function(){
 try{
   const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
@@ -847,39 +848,7 @@ try{
   dash.position.set(.46,.99,0); car.add(dash);
   const cabinFloor = new THREE.Mesh(new THREE.BoxGeometry(1.5,.05,1.5), matTan);
   cabinFloor.position.set(-.25,.985,0); car.add(cabinFloor);
-  // the lost watch collection, riding along
-  function metal(hex){ return new THREE.MeshStandardMaterial({color:hex, metalness:.95, roughness:.22}); }
-  function watchRider(cfg){
-    const w = new THREE.Group();
-    const mCase = metal(cfg.kase), mBand = metal(cfg.band);
-    const band = new THREE.Mesh(new THREE.TorusGeometry(.20,.055,10,24), mBand); w.add(band);
-    const kase = new THREE.Mesh(new THREE.CylinderGeometry(.16,.16,.09,20), mCase);
-    kase.rotation.x = Math.PI/2; w.add(kase);
-    const face = new THREE.Mesh(new THREE.CylinderGeometry(.125,.125,.10,20),
-      new THREE.MeshStandardMaterial({color:cfg.face, roughness:.35, metalness:cfg.paved?.6:.1}));
-    face.rotation.x = Math.PI/2; w.add(face);
-    if (cfg.bezel){
-      const bz = new THREE.Mesh(new THREE.TorusGeometry(.135,.022,8,24), metal(cfg.bezel));
-      bz.position.z = .052; w.add(bz);
-      const bz2 = bz.clone(); bz2.position.z = -.052; w.add(bz2);
-    }
-    const crown = new THREE.Mesh(new THREE.CylinderGeometry(.03,.03,.06,8), mCase);
-    crown.rotation.z = Math.PI/2; crown.position.set(.20,0,0); w.add(crown);
-    w.rotation.y = -Math.PI/2 + (cfg.tilt||0);
-    w.scale.setScalar(cfg.scale||1);
-    w.position.set(cfg.x, cfg.y, cfg.z);
-    car.add(w); return w;
-  }
-  const watches = [
-    // Patek Aquanaut Luce Rainbow drives — rose gold, red strap
-    watchRider({x:-.28, y:1.16, z:.42,  tilt:.18,  kase:0xd9902c, band:0xd42020, face:0xf2efe4, bezel:0xcc66aa}),
-    // AP Royal Oak skeleton rides shotgun — full steel
-    watchRider({x:-.28, y:1.16, z:-.42, tilt:-.14, kase:0xb8bcc8, band:0xb8bcc8, face:0x2a2a33}),
-    // pave GMT-Master II on the deck — gold on gold, blue bezel
-    watchRider({x:-1.30, y:1.36, z:.48,  tilt:.35,  kase:0xd9a92c, band:0xd9a92c, face:0xe8d27a, paved:true, bezel:0x1a3a8f, scale:.8}),
-    // Beach Daytona next to it — white gold, mint dial
-    watchRider({x:-1.30, y:1.36, z:-.48, tilt:-.30, kase:0xc8ccd4, band:0xc8ccd4, face:0xa8e6b0, scale:.8})
-  ];
+
 
   // ---- wheels: telephone dials ----
   function wheel(x, r, z){
@@ -938,7 +907,6 @@ try{
       if(performance.now()-lastMove>2500) yaw += .0032;   // idle auto-rotate
     }
     wheels.forEach(w=>w.rotation.y -= .12);
-    watches.forEach((w,i)=>{ w.position.y = (i<2?1.16:1.36) + Math.sin(t*.004 + i*2)*.02; });
     car.position.y = Math.sin(t*.0012)*.05;               // gentle hover
     place();
     renderer.render(scene,camera);
@@ -1032,20 +1000,19 @@ return true;
 
 <script>
 (function(){
-  var wrap = document.getElementById('carWrap');
-  var btn = document.getElementById('mode3d');
-  var hint = wrap.querySelector('.drag-hint');
+  var box = document.getElementById('car3d');
   var built = false;
-  btn.addEventListener('click', function(){
-    var to3d = !wrap.classList.contains('mode-3d');
-    if (to3d && !built){
-      if (window.__init3D && window.__init3D() !== false){ built = true; }
-      else { btn.textContent = '3D NEEDS THE LIVE SITE'; return; }
+  function boot(){
+    if (built) return; built = true;
+    if (!window.__init3D || window.__init3D() === false){
+      box.querySelector('.drag-hint').textContent = '3D VIEW NEEDS THE LIVE SITE';
     }
-    wrap.classList.toggle('mode-3d', to3d);
-    hint.hidden = !to3d;
-    btn.textContent = to3d ? '\u25C0 BACK TO 2D' : 'SPIN IT IN 3D \u25B6';
-  });
+  }
+  if ('IntersectionObserver' in window){
+    new IntersectionObserver(function(es,o){
+      if (es.some(function(e){return e.isIntersecting;})){ boot(); o.disconnect(); }
+    },{rootMargin:'200px'}).observe(box);
+  } else { boot(); }
 })();
 </script>
 </body>
