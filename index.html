@@ -335,7 +335,7 @@
     display:inline-block;
     font-family:'Press Start 2P',monospace;
     font-size:.62rem;letter-spacing:.15em;color:var(--neon-cyan);
-    animation:tick 30s linear infinite;
+    animation:tick 70s linear infinite;
     padding-left:100%;
   }
   @keyframes tick{to{transform:translateX(-100%)}}
@@ -553,8 +553,7 @@
       <div class="card"><div class="big">$800K</div><div class="sub">What the car is worth.</div></div>
       <div class="card"><div class="big red">−$400K</div><div class="sub">What he still owes on it. His words: he can't just "eat the Lambo."</div></div>
     </div>
-    <p class="fine">The deal, straight from the video: <b>like the video</b> and you're in. If a scheduled upload doesn't show, one person who liked it gets the Countach. Contract runs through the <b>Super Bowl</b>.</p>
-  </section>
+    </section>
 
   <section>
     <div class="sec-title">The Garage</div>
@@ -729,10 +728,11 @@ try{
 
   // ---- body profile (nose = +x), wheel arches cut into the bottom edge ----
   const top = [
-    [3.12,.35],[3.14,.47],[3.08,.63],      // low nose
+    [3.10,.30],[3.15,.46],[3.10,.62],      // front fascia
+    [2.55,.70],                             // hood crease
     [.70,.99],                              // hood line to cowl
     [-.80,1.03],                            // beltline under the glass canopy
-    [-.84,1.30],                            // B-pillar
+    [-.84,1.24],                            // B-pillar
     [-1.60,1.13],[-2.50,1.01],              // engine deck slope
     [-2.92,.95],[-2.96,.67],[-2.92,.39],   // kamm tail
     [-2.76,.31]
@@ -742,11 +742,11 @@ try{
   for(let i=1;i<top.length;i++) shape.lineTo(top[i][0], top[i][1]);
   function arch(cx,r){ for(let a=0;a<=10;a++){const t=Math.PI-a*Math.PI/10; shape.lineTo(cx+r*Math.cos(t), .31+r*.92*Math.sin(t));}}
   shape.lineTo(-2.48,.31); arch(-2.0,.50);
-  shape.lineTo(1.14,.31);  arch(1.6,.46);
+  shape.lineTo(1.29,.31);  arch(1.75,.46);
   shape.lineTo(2.90,.31);  shape.closePath();
 
   // plan-view half-width multipliers along the length (nose narrow, haunches wide)
-  const WSTOPS = [[3.14,.42],[2.7,.70],[2.0,.88],[1.0,.90],[0,.95],[-1.0,1.03],[-2.0,1.09],[-2.6,1.08],[-2.96,.96]];
+  const WSTOPS = [[3.15,.58],[2.7,.78],[2.0,.90],[1.0,.91],[0,.95],[-1.0,1.03],[-2.0,1.09],[-2.6,1.08],[-2.96,.96]];
   function wmul(x){
     if (x >= WSTOPS[0][0]) return WSTOPS[0][1];
     for (let i=1;i<WSTOPS.length;i++){
@@ -772,7 +772,7 @@ try{
 
   // ---- greenhouse glass sliver on top ----
   const gs = new THREE.Shape();
-  [[.80,.96],[.02,1.315],[-.82,1.315],[-.82,1.00],[.74,.96]].forEach((p,i)=> i? gs.lineTo(p[0],p[1]) : gs.moveTo(p[0],p[1]));
+  [[.80,.96],[.06,1.25],[-.82,1.25],[-.82,1.00],[.74,.96]].forEach((p,i)=> i? gs.lineTo(p[0],p[1]) : gs.moveTo(p[0],p[1]));
   gs.closePath();
   const gGeo = new THREE.ExtrudeGeometry(gs,{depth:HW*2-.16, bevelEnabled:false});
   gGeo.translate(0,0,-(HW-.08));
@@ -807,7 +807,7 @@ try{
   // ---- engine-deck louvres ----
   for(let i=0;i<5;i++){
     const x = -1.05 - i*.28;
-    const y = 1.30 + (x+.84)*(1.13-1.30)/(-1.60+.84) + .015;
+    const y = 1.24 + (x+.84)*(1.13-1.24)/(-1.60+.84) + .015;
     const l = new THREE.Mesh(new THREE.BoxGeometry(.10,.045,1.55), matDark);
     l.position.set(x,y,0); l.rotation.z = -.19; car.add(l);
   }
@@ -834,14 +834,31 @@ try{
     ex.rotation.z=Math.PI/2; ex.position.set(-2.95,.30,z); car.add(ex);
   });
 
-  // ---- pop-up headlights + amber markers on the nose ----
-  [-.62,.62].forEach(z=>{
-    const pod = new THREE.Mesh(new THREE.BoxGeometry(.34,.13,.4), matBody);
-    pod.position.set(2.42,.79,z*.78); pod.rotation.z=.28; car.add(pod);
-    const lamp = new THREE.Mesh(new THREE.BoxGeometry(.1,.09,.32), new THREE.MeshStandardMaterial({color:0xffd21f, emissive:0xffa500, emissiveIntensity:.8}));
-    lamp.position.set(2.55,.86,z*.78); car.add(lamp);
-    const marker = new THREE.Mesh(new THREE.BoxGeometry(.06,.09,.3), new THREE.MeshStandardMaterial({color:0xff9d3c, emissive:0x884400}));
-    marker.position.set(3.06,.50,z*.62); car.add(marker);
+  // ---- flush pop-up covers, nose lamps, front bumper ----
+  const hoodAngle = Math.atan2(.99-.70, 3.10-.70) * 0;   // covers sit on the hood slope
+  [-1,1].forEach(sgn=>{
+    // closed pop-up cover: body color, outlined so the seam reads
+    const cover = new THREE.Mesh(new THREE.BoxGeometry(.44,.045,.34), matBody);
+    cover.position.set(2.30,.775,sgn*.46); cover.rotation.z=.13; car.add(cover);
+    car.add(new THREE.LineSegments(new THREE.EdgesGeometry(cover.geometry), edgePink)
+      .translateX(2.30).translateY(.775).translateZ(sgn*.46).rotateZ(.13));
+    // clear indicator lamp on the nose corner
+    const lamp = new THREE.Mesh(new THREE.BoxGeometry(.30,.04,.22),
+      new THREE.MeshStandardMaterial({color:0xfff2cf, emissive:0xffd21f, emissiveIntensity:.35}));
+    lamp.position.set(2.86,.685,sgn*.44); lamp.rotation.z=.13; car.add(lamp);
+  });
+  // full-width bumper with lip
+  const bumper = new THREE.Mesh(new THREE.BoxGeometry(.22,.16,1.32), matDark);
+  bumper.position.set(3.14,.40,0); car.add(bumper);
+  const lip = new THREE.Mesh(new THREE.BoxGeometry(.26,.05,1.36), matDark);
+  lip.position.set(3.12,.31,0); car.add(lip);
+  // rocker strakes ahead of the rear wheels (25th Anniversary gills)
+  [-1,1].forEach(sgn=>{
+    const zr = sgn * (HW * wmul(-1.15) + .015);
+    for (let i=0;i<4;i++){
+      const strake = new THREE.Mesh(new THREE.BoxGeometry(.55,.045,.05), matDark);
+      strake.position.set(-1.15,.40+i*.08,zr); car.add(strake);
+    }
   });
   // tan cabin + the watch collection riding shotgun
   const dash = new THREE.Mesh(new THREE.BoxGeometry(.5,.08,1.55), matTan);
@@ -869,7 +886,7 @@ try{
     g.position.set(x,.42,z);
     car.add(g); return g;
   }
-  const wheels = [wheel(-2.0,.46,-1.10), wheel(-2.0,.46,1.10), wheel(1.6,.42,-1.06), wheel(1.6,.42,1.06)];
+  const wheels = [wheel(-2.0,.46,-1.10), wheel(-2.0,.46,1.10), wheel(1.75,.42,-1.05), wheel(1.75,.42,1.05)];
 
   // ---- ground shadow ----
   const sh = new THREE.Mesh(new THREE.CircleGeometry(1,32),
